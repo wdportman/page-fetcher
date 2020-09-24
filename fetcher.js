@@ -1,10 +1,16 @@
 const fs = require('fs');
 const request = require('request');
 
-let userInput = process.argv[2];
+let url = process.argv[2];
+let file = process.argv[3];
 
-request(userInput, (error, response, body) => {
-  console.log('error:', error);
-  console.log('statusCode:', response && response.statusCode);
-  console.log('body:', body);
+request(url, (error, response, body) => {
+  fs.writeFile(file, body, (error) => {
+    if (error) {
+      return error;
+    }
+    let fileStats = fs.statSync(file);
+    let fileSize = fileStats["size"];
+    console.log(`Downloaded and saved ${fileSize} bytes to ${file}`)
+  });
 });
